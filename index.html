@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Commerce Website</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1 class="logo">Anand</h1>
+            <nav>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#products">Products</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+            <button id="cart-btn" class="cart-btn">Cart (<span id="cart-count">0</span>)</button>
+        </div>
+    </header>
+
+    <main>
+        <section id="home" class="hero">
+            <div class="container">
+                <h2>Welcome to ShopEase</h2>
+                <p>Your one-stop shop for all your needs.</p>
+                <a href="#products" class="btn">Shop Now</a>
+            </div>
+        </section>
+
+        <section id="products" class="products">
+            <div class="container">
+                <h2>Featured Products</h2>
+                <div class="product-grid">
+                    <div class="product">
+                        <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=300&h=200&fit=crop" alt="Smartphone">
+                        <h3>Product 1</h3>
+                        <p>$599</p>
+                        <button>Add to Cart</button>
+                    </div>
+                    <div class="product">
+                        <img src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=300&h=200&fit=crop" alt="Laptop">
+                        <h3>Product 2</h3>
+                        <p>$499</p>
+                        <button>Add to Cart</button>
+                    </div>
+                    <div class="product">
+                        <img src="https://images.unsplash.com/photo-1549298916-b41d501d3772?w=300&h=200&fit=crop" alt="Sneakers">
+                        <h3>Product 3</h3>
+                        <p>$19.99</p>
+                        <button>Add to Cart</button>
+                    </div>
+                    <div class="product">
+                        <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=300&h=200&fit=crop" alt="Watch">
+                        <h3>Product 4</h3>
+                        <p>$49.99</p>
+                        <button>Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="contact">
+            <div class="container">
+                <h2>Contact Us</h2>
+                <p>Phone: 9288129460</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 ShopEase. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Cart Modal -->
+    <div id="cart-modal" class="cart-modal">
+        <div class="cart-modal-content">
+            <span class="close-btn">&times;</span>
+            <h2>Your Cart</h2>
+            <div id="cart-items"></div>
+            <div id="cart-total">Total: $0</div>
+        </div>
+    </div>
+
+    <script>
+        let cart = [];
+        const cartCount = document.getElementById('cart-count');
+        const cartBtn = document.getElementById('cart-btn');
+        const cartModal = document.getElementById('cart-modal');
+        const cartItems = document.getElementById('cart-items');
+        const cartTotal = document.getElementById('cart-total');
+        const closeBtn = document.querySelector('.close-btn');
+
+        // Add to cart functionality
+        document.querySelectorAll('.product button').forEach((btn, index) => {
+            btn.addEventListener('click', () => {
+                const product = btn.parentElement;
+                const name = product.querySelector('h3').textContent;
+                const price = product.querySelector('p').textContent;
+                const img = product.querySelector('img').src;
+                addToCart({ name, price, img, id: index });
+            });
+        });
+
+        function addToCart(item) {
+            cart.push(item);
+            updateCart();
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCart();
+        }
+
+        function updateCart() {
+            cartCount.textContent = cart.length;
+            cartItems.innerHTML = '';
+            let total = 0;
+            cart.forEach((item, index) => {
+                const price = parseFloat(item.price.replace('$', ''));
+                total += price;
+                cartItems.innerHTML += `
+                    <div class="cart-item">
+                        <img src="${item.img}" alt="${item.name}" width="50">
+                        <span>${item.name} - ${item.price}</span>
+                        <button onclick="removeFromCart(${index})">Remove</button>
+                    </div>
+                `;
+            });
+            cartTotal.textContent = `Total: $${total.toFixed(2)}`;
+        }
+
+        // Modal functionality
+        cartBtn.addEventListener('click', () => {
+            cartModal.style.display = 'block';
+        });
+
+        closeBtn.addEventListener('click', () => {
+            cartModal.style.display = 'none';
+        });
+
+        window.addEventListener('click', (e) => {
+            if (e.target === cartModal) {
+                cartModal.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
